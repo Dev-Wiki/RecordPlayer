@@ -2,6 +2,8 @@ package net.devwiki.audio;
 
 import android.content.Context;
 
+import net.devwiki.util.AmrUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class AudioSender {
 
     private List<AudioData> dataList;
     private Context context;
+    private String filePath;
+    private boolean isFirstSlice = true;
 
     public AudioSender(Context context){
         this.context = context;
@@ -31,6 +35,10 @@ public class AudioSender {
         return dataList.add(audioData);
     }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     /**
      * 检查并发送数据
      * @param isLast 是否为最后一片数据
@@ -39,8 +47,14 @@ public class AudioSender {
         if (dataList.size() == SEND_LIMIT || isLast){
             byte[] sendData = mergeData();
             dataList.clear();
+            saveAmrData(sendData, isFirstSlice);
+            isFirstSlice = false;
             sendAudioData(sendData);
         }
+    }
+
+    public void resetSliceIndex(){
+        isFirstSlice = true;
     }
 
     /**
@@ -57,6 +71,10 @@ public class AudioSender {
 
     public void sendAudioData(byte[] sendData){
         //发送录音数据
+    }
+
+    public void saveAmrData(byte[] amrData, boolean isFirst){
+        AmrUtil.saveAmrFile(filePath, amrData, isFirst);
     }
 
     public void cancelSend(){

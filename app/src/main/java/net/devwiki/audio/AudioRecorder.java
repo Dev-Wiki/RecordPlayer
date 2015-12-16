@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -91,13 +92,17 @@ public class AudioRecorder {
      * 启动录音器
      * @param recordCallback 录音回调接口
      */
-    public void startRecorder(@NonNull RecordCallback recordCallback){
+    public void startRecorder(@NonNull RecordCallback recordCallback, String fileName){
         //接收参数
         this.recordCallback = recordCallback;
 
         //初始化一些数据
         isCancelRecord = false;
         isRecording = false;
+        audioSender.resetSliceIndex();
+        audioSender.setFilePath(
+                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + "recordplayer/" + fileName);
 
         if (startRecord()){
             encodeHandle = AmrEncoder.init(0);

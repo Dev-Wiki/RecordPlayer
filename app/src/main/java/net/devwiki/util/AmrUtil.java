@@ -3,6 +3,8 @@ package net.devwiki.util;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -90,11 +92,14 @@ public class AmrUtil {
         return duration;
     }
 
-    public static void saveAmrFile(String path, byte[] amrData, boolean isFirst, boolean isLast){
+    public static void saveAmrFile(String path, byte[] amrData, boolean isFirst){
         if (isFirst){
             byte[] data = new byte[AMR_HEAD.length + amrData.length];
             System.arraycopy(AMR_HEAD, 0, data, 0, AMR_HEAD.length);
             System.arraycopy(amrData, 0, data, AMR_HEAD.length, amrData.length);
+            saveToFile(data, path);
+        } else {
+            saveToFile(amrData, path);
         }
     }
 
@@ -104,6 +109,24 @@ public class AmrUtil {
         }
         if (TextUtils.isEmpty(path)){
             return;
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(path);
+            fos.write(data);
+            fos.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
