@@ -4,6 +4,28 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    //    def versionPropsFile = file('version.properties')
+//
+//    if (versionPropsFile.canRead()) {
+//        def Properties versionProps = new Properties()
+//        versionProps.load(new FileInputStream(versionPropsFile))
+//        int code = versionProps['VERSION_CODE'].toInteger() + 1
+//        versionProps['VERSION_CODE']=code.toString()
+//        versionProps.store(versionPropsFile.newWriter(), null)
+//
+//        defaultConfig {
+//            applicationId "com.xtc.watch"
+//            minSdkVersion 14
+//            targetSdkVersion 22
+//            versionCode code
+//            versionName "1.3.0"
+//
+//            multiDexEnabled true
+//        }
+//    } else {
+//        throw new GradleException("Could not read version.properties!")
+//    }
+
     defaultConfig {
         applicationId "net.devwiki.recordplayer"
         minSdkVersion 14
