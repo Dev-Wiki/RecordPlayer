@@ -21,6 +21,8 @@ public class AudioRecorder {
     public static final int PCM_SIZE = 320;
     public static final int AMR_SIZE = 13;
 
+    public static final String AMR_SUFFIX = ".amr";
+
     /**
      * 初始化AudioRecord时需要填写硬件支持的信息,返回此值代表参数有误
      */
@@ -102,7 +104,7 @@ public class AudioRecorder {
         audioSender.resetSliceIndex();
         audioSender.setFilePath(
                 Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/" + fileName + ".amr");
+                        + "/" + fileName + AMR_SUFFIX);
 
         if (startRecord()){
             encodeHandle = AmrEncoder.init(0);
