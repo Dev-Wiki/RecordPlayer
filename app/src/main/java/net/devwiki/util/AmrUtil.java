@@ -112,7 +112,7 @@ public class AmrUtil {
         }
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(path);
+            fos = new FileOutputStream(path, true);
             fos.write(data);
             fos.flush();
         } catch (FileNotFoundException e) {

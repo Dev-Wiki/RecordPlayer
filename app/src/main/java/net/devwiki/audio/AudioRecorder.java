@@ -102,7 +102,7 @@ public class AudioRecorder {
         audioSender.resetSliceIndex();
         audioSender.setFilePath(
                 Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "recordplayer/" + fileName);
+                        + "/" + fileName + ".amr");
 
         if (startRecord()){
             encodeHandle = AmrEncoder.init(0);
@@ -141,7 +141,7 @@ public class AudioRecorder {
         stopRecord();
     }
 
-    public boolean stopRecord(){
+    private boolean stopRecord(){
         try {
             if (audioRecord != null) {
                 audioRecord.stop();
@@ -178,6 +178,7 @@ public class AudioRecorder {
         public void run() {
             byte[] pcmDate = new byte[PCM_SIZE];
             int readSize;
+            long startTime = System.currentTimeMillis();
             while (isRecording){
                 readSize = audioRecord.read(pcmDate, 0, PCM_SIZE);
                 if (readSize == AudioRecord.ERROR_INVALID_OPERATION){
@@ -192,6 +193,13 @@ public class AudioRecorder {
             readSize = audioRecord.read(pcmDate, 0, PCM_SIZE);
             dealRecordData(pcmDate, readSize, true);
 
+        }
+    }
+
+    private void calculateTime(long startTime){
+        long time = System.currentTimeMillis() - startTime;
+        if (time > RECORD_MAX_TIME){
+            recordCallback.onMaxTime();
         }
     }
 
