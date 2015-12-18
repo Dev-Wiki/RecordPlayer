@@ -3,6 +3,10 @@ package net.devwiki.audio;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.text.TextUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * 音频播放器
@@ -39,7 +43,30 @@ public class AudioPlayer {
         }
     };
 
-    public void play(String path){
-        audioManager.requestAudioFocus(changeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+    public synchronized void play(String path, PlayListener listener){
+        int result = audioManager.requestAudioFocus(changeListener, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
+
+        } else {
+
+        }
+    }
+
+    private void playAudio(String path, PlayListener playListener){
+        if (TextUtils.isEmpty(path)){
+            return;
+        }
+        File file = new File(path);
+        if (!file.exists()){
+            return;
+        }
+        FileInputStream fileInputStream;
+    }
+
+    public interface PlayListener{
+        void onPlay();
+
+        void onComplete();
     }
 }
