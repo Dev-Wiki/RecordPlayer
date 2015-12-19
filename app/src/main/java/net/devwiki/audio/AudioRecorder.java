@@ -50,6 +50,8 @@ public class AudioRecorder {
     private boolean isCancelRecord = false;
     private int encodeHandle;
     private int volume;
+    //用于回调控制的标志,确保倒计时回调调用次数
+    private boolean[] callbackFlag;
 
     private int bufferSize = AudioRecord.ERROR_BAD_VALUE;
 
@@ -100,6 +102,7 @@ public class AudioRecorder {
         this.recordCallback = recordCallback;
 
         //初始化一些数据
+        callbackFlag = new boolean[]{true, true, true, true};
         isCancelRecord = false;
         isRecording = false;
         audioSender.resetSliceIndex();
@@ -142,15 +145,15 @@ public class AudioRecorder {
         stopRecord();
     }
 
-    private boolean stopRecord(){
+    private void stopRecord(){
         try {
             if (audioRecord != null) {
+                isRecording = false;
                 audioRecord.stop();
             }
         } catch (IllegalStateException e){
             e.printStackTrace();
         }
-        return audioRecord != null && audioRecord.getRecordingState() == AudioRecord.RECORDSTATE_STOPPED;
     }
 
     public void release(){
@@ -189,6 +192,7 @@ public class AudioRecorder {
                 } else {
                     volume = (int)calculateVolume(pcmDate);
                     dealRecordData(pcmDate, readSize, false);
+                    calculateTime(startTime);
                 }
             }
             readSize = audioRecord.read(pcmDate, 0, PCM_SIZE);
@@ -200,7 +204,26 @@ public class AudioRecorder {
     private void calculateTime(long startTime){
         long time = System.currentTimeMillis() - startTime;
         if (time > RECORD_MAX_TIME){
-            recordCallback.onMaxTime();
+            if (callbackFlag[3]){
+                stopRecord();
+                recordCallback.onMaxTime();
+                callbackFlag[3] = false;
+            }
+        } else if (time > 14000){
+            if (callbackFlag[2]){
+                recordCallback.onDownTime(1);
+                callbackFlag[2] = false;
+            }
+        } else if (time > 13000){
+            if (callbackFlag[1]){
+                recordCallback.onDownTime(2);
+                callbackFlag[1] = false;
+            }
+        } else if (time > 12000){
+            if (callbackFlag[0]){
+                recordCallback.onDownTime(3);
+                callbackFlag[0] = false;
+            }
         }
     }
 
