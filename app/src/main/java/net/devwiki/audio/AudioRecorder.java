@@ -243,6 +243,10 @@ public class AudioRecorder {
         }
     }
 
+    public double getVolume(){
+        return volume;
+    }
+
     private double calculateVolume(byte[] buffer) {
         //这是一个音量算法,结果最大不超过35
         if (buffer.length == 0) {

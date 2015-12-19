@@ -23,6 +23,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String filePath;
     private RecordHandler handler;
     private boolean isRecorderAccess = false;
+    private Runnable volumeRun = new Runnable() {
+        @Override
+        public void run() {
+            int volume = (int)recorder.getVolume();
+            resultView.append("当前音量:" + volume);
+            resultView.append("\n");
+            handler.postDelayed(volumeRun, 500);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onStartSuccess() {
                     resultView.append("启动录音成功");
                     resultView.append("\n");
+                    handler.postDelayed(volumeRun, 500);
                 }
 
                 @Override
@@ -123,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     message.what = RecordHandler.WHAT_UPDATE_TIME;
                     message.arg1 = 0;
                     handler.sendMessage(message);
+                    handler.removeCallbacks(volumeRun);
                 }
             }, filePath);
         } else {
@@ -134,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void stopRecord(){
         if (recorder.isRecording()){
             recorder.stopRecorder();
+            handler.removeCallbacks(volumeRun);
         }
     }
 
