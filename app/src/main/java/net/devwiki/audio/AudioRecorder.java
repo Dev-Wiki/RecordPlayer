@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -56,8 +55,10 @@ public class AudioRecorder {
 
     public static AudioRecorder getInstance(Context context){
         if (instance == null){
-            synchronized (AudioRecorder.class){
-                instance = new AudioRecorder(context);
+            synchronized (AudioRecorder.class) {
+                if (instance == null) {
+                    instance = new AudioRecorder(context);
+                }
             }
         }
         return instance;
@@ -94,7 +95,7 @@ public class AudioRecorder {
      * 启动录音器
      * @param recordCallback 录音回调接口
      */
-    public void startRecorder(@NonNull RecordCallback recordCallback, String fileName){
+    public void startRecorder(@NonNull RecordCallback recordCallback, String filePath){
         //接收参数
         this.recordCallback = recordCallback;
 
@@ -102,9 +103,7 @@ public class AudioRecorder {
         isCancelRecord = false;
         isRecording = false;
         audioSender.resetSliceIndex();
-        audioSender.setFilePath(
-                Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/" + fileName + AMR_SUFFIX);
+        audioSender.setFilePath(filePath);
 
         if (startRecord()){
             encodeHandle = AmrEncoder.init(0);

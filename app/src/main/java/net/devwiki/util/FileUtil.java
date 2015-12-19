@@ -4,7 +4,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * 文件工具类
@@ -12,7 +11,7 @@ import java.io.IOException;
  */
 public class FileUtil {
 
-    public static final String ROOT_NAME = "/RecordPlayer";
+    public static final String ROOT_NAME = "/RecordPlayer/";
 
     public static void createRootDir(){
         if (TextUtils.isEmpty(getRootPath())){
@@ -22,11 +21,7 @@ public class FileUtil {
         if (file.exists()){
             return;
         }
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        file.mkdirs();
     }
 
     public static String getRootPath(){

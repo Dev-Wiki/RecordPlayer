@@ -18,21 +18,45 @@
         <TextView
             android:id="@+id/record_result"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"/>
+            android:layout_height="wrap_content"/>
     </ScrollView>
 
-    <Button
-        android:id="@+id/start_record"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="START RECORD"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/start_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="START RECORD"/>
 
-    <Button
-        android:id="@+id/stop_record"
+        <Button
+            android:id="@+id/stop_record"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="STOP RECORD"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="STOP RECORD"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/start_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="START PLAY"/>
+
+        <Button
+            android:id="@+id/stop_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="STOP PLAY"/>
+    </LinearLayout>
+
 </LinearLayout>
